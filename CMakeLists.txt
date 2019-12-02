@@ -6,7 +6,12 @@ endif()
 set(BUILD_CXX_LANGUAGE_PACKAGE OFF CACHE BOOL "Add C and C++ support to the Sourcetrail indexer.")
 set(BUILD_JAVA_LANGUAGE_PACKAGE OFF CACHE BOOL "Add Java support to the Sourcetrail indexer.")
 set(BUILD_PYTHON_LANGUAGE_PACKAGE OFF CACHE BOOL "Add Python support to the Sourcetrail indexer.")
-
+#option(
+#	MSVC_WARNINGS_AS_ERRORS
+#	"Treats all compiler warnings as errors"
+#	ON
+#)
+set(TREAT_WARNINGS_AS_ERRORS ON CACHE BOOL "Treat compiler warnings as errors")
 #set (CMAKE_VERBOSE_MAKEFILE ON)
 
 include(cmake/add_files.cmake)
@@ -81,6 +86,20 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" ST
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 	ADD_COMPILE_OPTIONS(/MP)
 endif()
+
+if(TREAT_WARNINGS_AS_ERRORS)
+	if(MSVC)
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /WX")
+		message(
+			STATUS
+			"Treating all warnings as errors"
+		)
+	endif()
+	#todoa: option for clang?
+endif()
+
+#todoa: doesn't work for msvc, mayby works for clang?
+#add_definitions(-Wfatal-errors)
 
 # For debugging the release build on linux
 #if (UNIX AND "${CMAKE_BUILD_TYPE}" STREQUAL "Release")
