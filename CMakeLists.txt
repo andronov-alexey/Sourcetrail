@@ -89,7 +89,10 @@ endif()
 
 if(TREAT_WARNINGS_AS_ERRORS)
 	if(MSVC)
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /WX")
+		set(WARNINGS_LIST "/wd4250")
+		set(CMAKE_CXX_WARNINGS_FLAGS "/experimental:external /external:anglebrackets /external:W0")
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_WARNINGS_FLAGS} ${WARNINGS_LIST}")
+		message(STATUS CMAKE_CXX_FLAGS = "${CMAKE_CXX_FLAGS}")
 		message(
 			STATUS
 			"Treating all warnings as errors"
