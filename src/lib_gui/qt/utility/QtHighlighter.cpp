@@ -168,7 +168,7 @@ QtHighlighter::QtHighlighter(QTextDocument* document, const std::wstring& langua
 
 void QtHighlighter::highlightDocument()
 {
-	TRACE();
+	TRACE("");
 
 	QTextDocument* doc = document();
 

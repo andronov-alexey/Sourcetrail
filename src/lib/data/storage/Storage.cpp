@@ -12,7 +12,7 @@ void Storage::inject(Storage* injected)
 	std::map<Id, Id> injectedIdToOwnElementId;
 	std::map<Id, Id> injectedIdToOwnSourceLocationId;
 
-	TRACE();
+	TRACE("");
 	startInjection();
 
 	{

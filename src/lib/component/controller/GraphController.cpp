@@ -631,7 +631,7 @@ void GraphController::clear()
 
 void GraphController::createDummyGraph(const std::shared_ptr<Graph> graph)
 {
-	TRACE();
+	TRACE("");
 
 	GraphView* view = getView();
 	if (!view)
@@ -840,7 +840,7 @@ void GraphController::autoExpandActiveNode(const std::vector<Id>& activeTokenIds
 
 bool GraphController::setActive(const std::vector<Id>& activeTokenIds, bool showAllEdges)
 {
-	TRACE();
+	TRACE("");
 
 	bool noActive = !activeTokenIds.size();
 	if (activeTokenIds.size() > 0)
@@ -895,7 +895,7 @@ bool GraphController::setActive(const std::vector<Id>& activeTokenIds, bool show
 
 void GraphController::setVisibility(bool noActive)
 {
-	TRACE();
+	TRACE("");
 
 	for (const std::shared_ptr<DummyNode>& node: m_dummyNodes)
 	{
@@ -905,7 +905,7 @@ void GraphController::setVisibility(bool noActive)
 
 void GraphController::setActiveAndVisibility(const std::vector<Id>& activeTokenIds)
 {
-	TRACE();
+	TRACE("");
 
 	setVisibility(setActive(activeTokenIds, false));
 }
@@ -1030,7 +1030,7 @@ void GraphController::hideBuiltinTypes()
 
 void GraphController::bundleNodes()
 {
-	TRACE();
+	TRACE("");
 
 	// evaluate top level nodes
 	for (const std::shared_ptr<DummyNode>& node: m_dummyNodes)
@@ -1415,7 +1415,7 @@ std::shared_ptr<DummyNode> GraphController::bundleByType(
 
 void GraphController::bundleNodesByType()
 {
-	TRACE();
+	TRACE("");
 
 	std::list<std::shared_ptr<DummyNode>> nodes(m_dummyNodes.begin(), m_dummyNodes.end());
 	std::vector<std::shared_ptr<DummyNode>> oldNodes = std::move(m_dummyNodes);
@@ -1509,7 +1509,7 @@ bool GraphController::hasCharacterIndex() const
 
 void GraphController::groupNodesByParents(GroupType groupType)
 {
-	TRACE();
+	TRACE("");
 
 	if (groupType != GroupType::FILE && groupType != GroupType::NAMESPACE)
 	{
@@ -1649,7 +1649,7 @@ void GraphController::groupNodesByParents(GroupType groupType)
 
 DummyNode* GraphController::groupAllNodes(GroupType groupType, Id groupNodeId)
 {
-	TRACE();
+	TRACE("");
 
 	std::shared_ptr<DummyNode> groupNode = std::make_shared<DummyNode>(DummyNode::DUMMY_GROUP);
 	groupNode->visible = true;
@@ -1673,7 +1673,7 @@ DummyNode* GraphController::groupAllNodes(GroupType groupType, Id groupNodeId)
 
 void GraphController::groupTrailNodes(GroupType groupType)
 {
-	TRACE();
+	TRACE("");
 
 	struct TrailNode
 	{
@@ -1836,7 +1836,7 @@ void GraphController::groupTrailNodes(GroupType groupType)
 
 void GraphController::layoutNesting()
 {
-	TRACE();
+	TRACE("");
 
 	extendEqualFunctionNames(m_dummyNodes);
 
@@ -2179,7 +2179,7 @@ void GraphController::layoutToGrid(DummyNode* node) const
 
 void GraphController::layoutGraph(bool getSortedNodes)
 {
-	TRACE();
+	TRACE("");
 
 	std::vector<std::shared_ptr<DummyNode>> visibleNodes;
 	for (auto node: m_dummyNodes)
@@ -2202,7 +2202,7 @@ void GraphController::layoutGraph(bool getSortedNodes)
 
 void GraphController::layoutList()
 {
-	TRACE();
+	TRACE("");
 
 	ListLayouter::layoutMultiColumn(getView()->getViewSize(), &m_dummyNodes);
 }

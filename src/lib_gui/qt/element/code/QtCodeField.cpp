@@ -38,7 +38,7 @@ QtCodeField::QtCodeField(
 	, m_code(code)
 	, m_endTextEditPosition(0)
 {
-	TRACE();
+	TRACE("");
 
 	setObjectName("code_area");
 	setReadOnly(true);
@@ -384,7 +384,7 @@ bool QtCodeField::annotateText(
 
 void QtCodeField::createAnnotations(std::shared_ptr<SourceLocationFile> locationFile)
 {
-	TRACE();
+	TRACE("");
 
 	m_locationFile = locationFile;
 	m_annotations.clear();

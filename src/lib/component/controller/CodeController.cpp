@@ -551,7 +551,7 @@ void CodeController::clear()
 std::vector<CodeFileParams> CodeController::getFilesForActiveSourceLocations(
 	const SourceLocationCollection* collection, Id declarationId) const
 {
-	TRACE();
+	TRACE("");
 
 	std::vector<CodeFileParams> files;
 	collection->forEachSourceLocationFile([&](std::shared_ptr<SourceLocationFile> file) -> void {
@@ -589,7 +589,7 @@ std::vector<CodeFileParams> CodeController::getFilesForActiveSourceLocations(
 std::vector<CodeFileParams> CodeController::getFilesForCollection(
 	std::shared_ptr<SourceLocationCollection> collection) const
 {
-	TRACE();
+	TRACE("");
 
 	std::vector<CodeFileParams> files;
 
@@ -642,7 +642,7 @@ CodeSnippetParams CodeController::getSnippetParamsForWholeFile(
 std::vector<CodeSnippetParams> CodeController::getSnippetsForFile(
 	std::shared_ptr<SourceLocationFile> activeSourceLocations) const
 {
-	TRACE();
+	TRACE("");
 
 	bool showsErrors = false;
 	if (activeSourceLocations->getSourceLocations().size())
@@ -1063,7 +1063,7 @@ void CodeController::iterateLocalReference(bool next, bool updateView)
 
 void CodeController::expandVisibleFiles(bool useSingleFileCache)
 {
-	TRACE();
+	TRACE("");
 
 	if (!m_files.size())
 	{
@@ -1179,7 +1179,7 @@ void CodeController::setFileState(
 void CodeController::setFileState(
 	CodeFileParams& file, MessageChangeFileView::FileState state, bool useSingleFileCache)
 {
-	TRACE();
+	TRACE("");
 
 	switch (state)
 	{
@@ -1220,7 +1220,7 @@ void CodeController::setFileState(
 
 bool CodeController::addAllSourceLocations()
 {
-	TRACE();
+	TRACE("");
 
 	bool addedNewLocations = false;
 
@@ -1284,7 +1284,7 @@ bool CodeController::addAllSourceLocations()
 
 void CodeController::addModificationTimes()
 {
-	TRACE();
+	TRACE("");
 
 	std::vector<FilePath> filePaths;
 	for (const CodeFileParams& file: m_files)
