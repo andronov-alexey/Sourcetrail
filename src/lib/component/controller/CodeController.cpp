@@ -393,7 +393,9 @@ void CodeController::handleMessage(MessageCodeShowDefinition* message)
 
 	if (message->inIDE)
 	{
-		MessageMoveIDECursor(filePath, lineNumber, columnNumber).dispatch();
+		MessageMoveIDECursor(
+			filePath, static_cast<unsigned int>(lineNumber), static_cast<unsigned int>(columnNumber))
+			.dispatch();
 		return;
 	}
 
@@ -483,7 +485,7 @@ void CodeController::handleMessage(MessageShowError* message)
 
 void CodeController::handleMessage(MessageShowReference* message)
 {
-	m_referenceIndex = message->refIndex;
+	m_referenceIndex = static_cast<unsigned int>(message->refIndex);
 	bool replayed = message->isReplayed();
 
 	if (m_referenceIndex >= 0 && m_referenceIndex < m_references.size())
@@ -653,7 +655,7 @@ std::vector<CodeSnippetParams> CodeController::getSnippetsForFile(
 		activeSourceLocations->getFilePath(), showsErrors);
 	size_t lineCount = textAccess->getLineCount();
 
-	SnippetMerger fileScopedMerger(1, lineCount);
+	SnippetMerger fileScopedMerger(1, static_cast<int>(lineCount));
 	std::map<int, std::shared_ptr<SnippetMerger>> mergers;
 
 	std::shared_ptr<SourceLocationFile> scopeLocations =
@@ -669,8 +671,9 @@ std::vector<CodeSnippetParams> CodeController::getSnippetsForFile(
 			activeSourceLocations->getFilePath(), LOCATION_COMMENT);
 	commentLocations->forEachStartSourceLocation([&](SourceLocation* location) {
 		atomicRanges.push_back(SnippetMerger::Range(
-			SnippetMerger::Border(location->getLineNumber(), false),
-			SnippetMerger::Border(location->getOtherLocation()->getLineNumber(), false)));
+			SnippetMerger::Border(static_cast<int>(location->getLineNumber()), false),
+			SnippetMerger::Border(
+				static_cast<int>(location->getOtherLocation()->getLineNumber()), false)));
 	});
 
 	atomicRanges = SnippetMerger::Range::mergeAdjacent(atomicRanges);
@@ -685,7 +688,7 @@ std::vector<CodeSnippetParams> CodeController::getSnippetsForFile(
 		params.startLineNumber = std::max<int>(
 			1, range.start.row - (range.start.strong ? 0 : snippetExpandRange));
 		params.endLineNumber = std::min<int>(
-			lineCount, range.end.row + (range.end.strong ? 0 : snippetExpandRange));
+			static_cast<int>(lineCount), range.end.row + (range.end.strong ? 0 : snippetExpandRange));
 
 		params.locationFile = activeSourceLocations->getFilteredByLines(
 			params.startLineNumber, params.endLineNumber);
@@ -724,8 +727,9 @@ std::vector<CodeSnippetParams> CodeController::getSnippetsForFile(
 			params.footer = activeSourceLocations->getFilePath().wstr();
 		}
 
-		for (const std::string& line:
-			 textAccess->getLines(params.startLineNumber, params.endLineNumber))
+		for (const std::string& line: textAccess->getLines(
+				 static_cast<unsigned int>(params.startLineNumber),
+				 static_cast<unsigned int>(params.endLineNumber)))
 		{
 			params.code += line;
 		}
@@ -743,7 +747,8 @@ std::shared_ptr<SnippetMerger> CodeController::buildMergerHierarchy(
 	std::map<int, std::shared_ptr<SnippetMerger>>& mergers) const
 {
 	std::shared_ptr<SnippetMerger> currentMerger = std::make_shared<SnippetMerger>(
-		location->getStartLocation()->getLineNumber(), location->getEndLocation()->getLineNumber());
+		static_cast<int>(location->getStartLocation()->getLineNumber()),
+		static_cast<int>(location->getEndLocation()->getLineNumber()));
 
 	const SourceLocation* scopeLocation = getSourceLocationOfParentScope(
 		location->getLineNumber(), scopeLocations);
@@ -755,11 +760,11 @@ std::shared_ptr<SnippetMerger> CodeController::buildMergerHierarchy(
 
 	std::shared_ptr<SnippetMerger> nextMerger;
 	std::map<int, std::shared_ptr<SnippetMerger>>::iterator it = mergers.find(
-		scopeLocation->getLocationId());
+		static_cast<int>(scopeLocation->getLocationId()));
 	if (it == mergers.end())
 	{
 		nextMerger = buildMergerHierarchy(scopeLocation, scopeLocations, fileScopedMerger, mergers);
-		mergers[scopeLocation->getLocationId()] = nextMerger;
+		mergers[static_cast<int>(scopeLocation->getLocationId())] = nextMerger;
 	}
 	else
 	{
@@ -998,7 +1003,7 @@ void CodeController::iterateReference(bool next)
 	{
 		if (m_referenceIndex < 1)
 		{
-			m_referenceIndex = m_references.size() - 1;
+			m_referenceIndex = static_cast<int>(m_references.size()) - 1;
 		}
 		else
 		{
@@ -1021,7 +1026,7 @@ void CodeController::iterateLocalReference(bool next, bool updateView)
 	{
 		m_localReferenceIndex++;
 
-		if (m_localReferenceIndex == m_localReferences.size())
+		if (m_localReferenceIndex == static_cast<int>(m_localReferences.size()))
 		{
 			m_localReferenceIndex = 0;
 		}
@@ -1030,7 +1035,7 @@ void CodeController::iterateLocalReference(bool next, bool updateView)
 	{
 		if (m_localReferenceIndex < 1)
 		{
-			m_localReferenceIndex = m_localReferences.size() - 1;
+			m_localReferenceIndex = static_cast<int>(m_localReferences.size()) - 1;
 		}
 		else
 		{
@@ -1048,7 +1053,7 @@ void CodeController::iterateLocalReference(bool next, bool updateView)
 		{
 			if (m_references[i].locationId == ref.locationId)
 			{
-				m_referenceIndex = i;
+				m_referenceIndex = static_cast<int>(i);
 			}
 		}
 	}
@@ -1394,7 +1399,7 @@ void CodeController::showFirstActiveReference(Id tokenId, bool updateView)
 			if (!firstReference.tokenId)
 			{
 				firstReference = ref;
-				referenceIndex = i;
+				referenceIndex = static_cast<int>(i);
 			}
 		}
 
