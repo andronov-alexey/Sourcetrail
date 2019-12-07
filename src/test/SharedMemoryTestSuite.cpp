@@ -47,7 +47,8 @@ TEST_CASE("shared memory")
 
 			SharedMemory::Map<int, int>* vals =
 				access.accessValueWithAllocator<SharedMemory::Map<int, int>>("vals");
-			vals->emplace(vals->size(), vals->size() * vals->size());
+			vals->emplace(
+				static_cast<int>(vals->size()), static_cast<int>(vals->size() * vals->size()));
 		}));
 	}
 
