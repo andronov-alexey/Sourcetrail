@@ -11,7 +11,7 @@ set(BUILD_PYTHON_LANGUAGE_PACKAGE OFF CACHE BOOL "Add Python support to the Sour
 #	"Treats all compiler warnings as errors"
 #	ON
 #)
-set(TREAT_WARNINGS_AS_ERRORS ON CACHE BOOL "Treat compiler warnings as errors")
+set(TREAT_WARNINGS_AS_ERRORS OFF CACHE BOOL "Treat compiler warnings as errors")
 #set (CMAKE_VERBOSE_MAKEFILE ON)
 
 include(cmake/add_files.cmake)
@@ -80,30 +80,36 @@ set(CMAKE_C_STANDARD 99)
 
 
 # Settings ---------------------------------------------------------------------
-
+message(STATUS CMAKE_CXX_COMPILER_ID = "${CMAKE_CXX_COMPILER_ID}")
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unknown-warning-option -fcolor-diagnostics -fvisibility-inlines-hidden")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 	ADD_COMPILE_OPTIONS(/MP)
 endif()
 
-if (TREAT_WARNINGS_AS_ERRORS)
-	if (MSVC)
-		# 4250 'class1' : inherits 'class2::member' via dominance
-		# MSVC has a bug making it impossible to fix this warning so we supress it here
-		set(WARNINGS_LIST "/wd4250")
-		set(CMAKE_CXX_WARNINGS_FLAGS "/experimental:external /external:anglebrackets /external:templates- /external:W0 /WX")
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_WARNINGS_FLAGS} ${WARNINGS_LIST}")
-		message(STATUS CMAKE_CXX_FLAGS = "${CMAKE_CXX_FLAGS}")
-		message(
-			STATUS
-			"Treat all warnings as errors enabled"
-		)
-	endif()
-	#todoa: option for clang?
+#if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "^(os|ios|android|linux|win32)$")
+#endif()
+# Whether compiler is tested to generate no warnings for solution
+set(NO_WARNINGS_GENERATED_COMPILER OFF)
+if (MSVC)
+	set(NO_WARNINGS_GENERATED_COMPILER ON)
 endif()
 
-#todoa: doesn't work for msvc, mayby works for clang?
+message(STATUS NO_WARNINGS_GENERATED_COMPILER = "${NO_WARNINGS_GENERATED_COMPILER}")
+message(STATUS TREAT_WARNINGS_AS_ERRORS = "${TREAT_WARNINGS_AS_ERRORS}")
+if (NO_WARNINGS_GENERATED_COMPILER AND TREAT_WARNINGS_AS_ERRORS)
+	# 4250 'class1' : inherits 'class2::member' via dominance
+	# MSVC has a bug making it impossible to fix this warning so we supress it here
+	set(WARNINGS_LIST "/wd4250")
+	set(CMAKE_CXX_WARNINGS_FLAGS "/experimental:external /external:anglebrackets /external:W0 /WX")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_WARNINGS_FLAGS} ${WARNINGS_LIST}")
+	message(STATUS CMAKE_CXX_FLAGS = "${CMAKE_CXX_FLAGS}")
+	message(
+		STATUS
+		"Treat all warnings as errors enabled"
+	)
+endif()
+#todoa: option for clang?gg
 #add_definitions(-Wfatal-errors)
 
 # For debugging the release build on linux
